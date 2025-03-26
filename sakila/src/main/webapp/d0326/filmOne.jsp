@@ -18,6 +18,7 @@
 	Class.forName("com.mysql.cj.jdbc.Driver");
 	conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/sakila","root","java1234");
 	
+	// 영화의 출연진들 검색
 	sql = "SELECT"
 			+" CONCAT(ac.first_name,' ',ac.last_name) AS actorName,"
 			+" ac.first_name AS firstName,"
@@ -32,7 +33,7 @@
 	stmt.setString(1,title);
 	rs = stmt.executeQuery();
 	
-	
+	// 출연진 리스트
 	ArrayList<HashMap<String,Object>> actorList = new ArrayList<HashMap<String,Object>>();
 	while(rs.next()){
 		HashMap<String,Object> actor = new HashMap<String,Object>();
@@ -40,7 +41,7 @@
 		actorList.add(actor);
 	}
 	
-	
+	// 영화의 상세 데이터
 	sql = "SELECT "
 			+" film_id AS filmId,"
 			+" title,"

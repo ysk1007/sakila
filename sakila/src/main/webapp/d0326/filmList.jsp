@@ -29,6 +29,7 @@
 	Class.forName("com.mysql.cj.jdbc.Driver");
 	conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/sakila","root","java1234");
 	
+	// 영화 데이터 개수 구하는 쿼리
 	sql = "SELECT"
 			+" COUNT(*) AS count"
 			+" FROM film"
@@ -53,7 +54,10 @@
 	// rs 초기화
 	rs.beforeFirst();
 	
+	// 컬럼 리스트
 	String[] colList = {"filmId","title","releaseYear","rentalDuration","rentalRate","length"};
+	
+	// 영화 리스트 쿼리
 	sql = "SELECT"
 			+" film_id AS filmId,"
 			+" title,"
@@ -72,6 +76,7 @@
 	stmt.setInt(3,rowDataCount);
 	rs = stmt.executeQuery();
 
+	// 영화 리스트
 	ArrayList<HashMap<String,Object>> filmList = new ArrayList<HashMap<String,Object>>();
 	while(rs.next()){
 		HashMap<String,Object> film = new HashMap<String,Object>();

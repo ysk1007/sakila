@@ -11,7 +11,7 @@
 	ResultSet rs = null;	
 	
 	// 변수 받기
-	if(request.getParameter("actor") != null)		// 제목 검색
+	if(request.getParameter("actor") != null)		// 배우 검색
 		actor = request.getParameter("actor");
 	
 	// 주소창에 공백을 못 받아서 이렇게 치환해야 할 듯
@@ -37,6 +37,7 @@
 	// 커서 초기화
 	rs.beforeFirst();
 	
+	// 출연작 리스트
 	ArrayList<HashMap<String,Object>> filmList = new ArrayList<HashMap<String,Object>>();
 	while(rs.next()){
 		HashMap<String,Object> film = new HashMap<String,Object>();

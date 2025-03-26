@@ -29,6 +29,7 @@
 	Class.forName("com.mysql.cj.jdbc.Driver");
 	conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/sakila","root","java1234");
 	
+	// 배우 리스트 전체 데이터 수 구하는 쿼리
 	sql = "SELECT"
 			+" COUNT(*) AS count"
 			+" FROM actor"
@@ -53,7 +54,10 @@
 	// rs 초기화
 	rs.beforeFirst();
 	
+	// 컬럼명 리스트
 	String[] colList = {"actorId","name","lastUpdate"};
+	
+	// 배우 데이터 리스트
 	sql = "SELECT"
 			+" actor_id AS actorId,"
 			+" CONCAT(first_name,' ',last_name) AS name,"
@@ -69,6 +73,7 @@
 	stmt.setInt(3,rowDataCount);
 	rs = stmt.executeQuery();
 	
+	// 배우 리스트
 	ArrayList<HashMap<String,Object>> actorList = new ArrayList<HashMap<String,Object>>();
 	while(rs.next()){
 		HashMap<String,Object> actor = new HashMap<String,Object>();
@@ -234,7 +239,7 @@
 		<br>
 		<!-- 검색 -->
 		<form action="/sakila/d0326/actorList.jsp">
-			영화 제목 : <input type="text" name="actor" value="<%=searchWord%>">
+			배우 이름 : <input type="text" name="actor" value="<%=searchWord%>">
 			<button type="submit">검색</button>
 		</form>
 </body>
