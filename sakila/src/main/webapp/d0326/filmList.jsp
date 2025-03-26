@@ -3,22 +3,16 @@
 <%@ page import="java.util.*" %>
 
 <%
-	// 변수
-	int currentPage = 1;							// 현재 페이지
-	int lastPage;									// 마지막 페이지
-	int startRow;									// 데이터가 시작할 위치
-	int rowDataCount = 11;							// 보여줄 데이터 수
-	int totalDataCount = 0;							// 전체 데이터 수
-	int pageDiv = 10;								// [1][2]...[10] 네비 개수
-	int storeId = 0;								// 지점 번호
+	int currentPage = 1;		// 현재 페이지
+	int lastPage = 0;			// 마지막 페이지
+	int rowDataCount = 11;		// 한 페이지에 보여줄 데이터 수
+	int totalDataCount = 0;		// 전체 데이터 수
+	int startRow = 0;
+	int pageDiv = 10;			
 	
-	String jsp = "/sakila/d0325/rentalList.jsp";	// jsp 위치
-	String sql = "";								// SQL 쿼리
-	String searchWord = "";							// 검색 단어
-	String where = " 1 ";							// WHERE 조건
-	
-	// 테이블 컬럼 명
-	String[] colList = {"rental_id","title","inventory_id","store_id","name","rental_date","return_date"};
+	String jsp = "/sakila/d0326/filmList.jsp";
+	String sql = "";
+	String searchWord = "";
 	
 	Connection conn = null;
 	PreparedStatement stmt = null;
@@ -28,32 +22,19 @@
 	if(request.getParameter("currentPage") != null)	// 현재 페이지
 		currentPage = Integer.parseInt(request.getParameter("currentPage"));
 	
-	if(request.getParameter("storeId") != null)		// 지점 번호
-		storeId = Integer.parseInt(request.getParameter("storeId"));
-	
-	if(request.getParameter("title") != null)		// 제목
+	if(request.getParameter("title") != null)		// 제목 검색
 		searchWord = request.getParameter("title");
-	
-	// 제목 검색 & 지점 번호에 따라서 WHERE 절에 조건 추가
-	if(!searchWord.equals(""))
-		where += " AND title LIKE '%" + searchWord + "%' ";
-	
-	if(storeId != 0)
-		where += " AND store_id =" + storeId;
 	
 	//DB 연결
 	Class.forName("com.mysql.cj.jdbc.Driver");
 	conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/sakila","root","java1234");
 	
-	// 전체 데이터 구할 쿼리
-	sql = " SELECT COUNT(*) count"
-		+" FROM rental r"
-		+" INNER JOIN customer c ON r.customer_id = c.customer_id"
-		+" INNER JOIN inventory i ON r.inventory_id = i.inventory_id"
-		+" INNER JOIN film f ON i.film_id = f.film_id"
-		+" WHERE " + where;
-	
+	sql = "SELECT"
+			+" COUNT(*) AS count"
+			+" FROM film"
+			+" WHERE title LIKE ?";
 	stmt = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+	stmt.setString(1,"%"+searchWord+"%");
 	rs = stmt.executeQuery();
 	rs.next();
 	
@@ -72,42 +53,37 @@
 	// rs 초기화
 	rs.beforeFirst();
 	
-	// 테이블 쿼리
-	sql = " SELECT" 
-		+"    r.inventory_id,"
-		+"    r.rental_id,"
-		+"    CONCAT('(', c.first_name, ' ', c.last_name, ')', c.customer_id) AS NAME,"
-		+"    r.rental_date,"
-		+"    r.return_date,"
-		+"    i.film_id,"
-		+"    i.store_id,"
-		+"    f.title AS title"
-		+" FROM rental r"
-		+" INNER JOIN customer c ON r.customer_id = c.customer_id"
-		+" INNER JOIN inventory i ON r.inventory_id = i.inventory_id"
-		+" INNER JOIN film f ON i.film_id = f.film_id"
-		+" WHERE " + where
-		+" ORDER BY rental_date DESC"
+	String[] colList = {"filmId","title","releaseYear","rentalDuration","rentalRate","length"};
+	sql = "SELECT"
+			+" film_id AS filmId,"
+			+" title,"
+			+" release_year AS releaseYear,"
+			+" rental_duration AS rentalDuration,"
+			+" rental_rate AS rentalRate,"
+			+" length"
+		+" FROM film"
+		+" WHERE title LIKE ?"
+		+" ORDER BY film_id ASC"
 		+" LIMIT ?,?;";
-		
-	stmt = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
-	stmt.setInt(1,startRow);
-	stmt.setInt(2,rowDataCount);
-	rs = stmt.executeQuery();
 	
-	// HashMap에 데이터 담기
-	ArrayList<HashMap<String,Object>> rentalList = new ArrayList<HashMap<String,Object>>();
+	stmt = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+	stmt.setString(1,"%"+searchWord+"%");
+	stmt.setInt(2,startRow);
+	stmt.setInt(3,rowDataCount);
+	rs = stmt.executeQuery();
+
+	ArrayList<HashMap<String,Object>> filmList = new ArrayList<HashMap<String,Object>>();
 	while(rs.next()){
-		HashMap<String,Object> m = new HashMap<String,Object>();
-		for(String col : colList){
-			m.put(col,rs.getObject(col));
+		HashMap<String,Object> film = new HashMap<String,Object>();
+		for(var col : colList){
+			film.put(col,rs.getObject(col));
 		}
-		rentalList.add(m);
+		filmList.add(film);
 	}
 	
 	rs.close();
 %>
-	
+
 <!DOCTYPE html>
 <html>
 <style>
@@ -204,52 +180,50 @@
 
 <head>
 <meta charset="UTF-8">
-<title>대여 리스트</title>
+<title>영화 리스트</title>
 </head>
 <body>
 	<h1><a href="/sakila/index.jsp">Sakila</a></h1>
 	
 	<br>
 
-	<h1>대여 리스트</h1>
-	
+	<h1>영화 리스트</h1>
 	<!-- 리스트 출력 -->
 	<table border="1" class="clean-table">
-		<tr>
-			<th>대여 번호</th>
-			<th>영화 제목</th>
-			<th>비디오 위치</th>
-			<th>지점</th>
-			<th>이름(고객 아이디)</th><!-- name = first_name + last_name -->
-			<th>대여일</th>
-			<th>반납일</th>
-		</tr>
-		<%
-			// 컬럼명 리스트로 테이블 행 출력 축약
-			for(HashMap<String,Object> m : rentalList){
-				%>
-					<tr>
-						<%
-							for(String col : colList){
-								%><td><%=m.get(col)%></td><%
-							}
-						%>
-					</tr>
-				<%
-			}
-		%>
+	<tr>
+		<th>영화 번호</th>
+		<th>영화 제목</th>
+		<th>개봉 연도</th>
+		<th>대여 기간</th>
+		<th>대여 비용</th>
+		<th>상영 시간</th>
+	</tr>
+	<%
+		for(var film : filmList){
+			%>
+			<tr>
+				<td><%=film.get("filmId")%></td>
+				<td><a href="/sakila/d0326/filmOne.jsp?title=<%=film.get("title")%>"><%=film.get("title")%></a></td>
+				<td><%=film.get("releaseYear")%></td>
+				<td><%=film.get("rentalDuration")%></td>
+				<td><%=film.get("rentalRate")%></td>
+				<td><%=film.get("length")%></td>
+			</tr>
+			<%
+		}
+	%>
 	</table>
-	
+		
 	<!-- 네비게이션 -->
 	
 	<h3><%=currentPage%> / <%=lastPage%> 페이지</h3>
 	
 	<div>
 		<!-- [처음] -->
-		<a href="<%=jsp%>?currentPage=1&title=<%=searchWord%>&storeId=<%=storeId%>">처음</a>
+		<a href="<%=jsp%>?currentPage=1&title=<%=searchWord%>">처음</a>
 		
 		<!-- [이전 10] -->
-		<a href="<%=jsp%>?currentPage=<%=currentPage - 10%>&title=<%=searchWord%>&storeId=<%=storeId%>">이전 10</a>
+		<a href="<%=jsp%>?currentPage=<%=currentPage - 10%>&title=<%=searchWord%>">이전 10</a>
 		
 		<%
 			// [1][2][3][4]...[9][10]
@@ -257,28 +231,20 @@
 				// 페이지 번호
 				int p = (((currentPage - 1) / 10) * 10) + i;
 				if(p > lastPage) continue; // 마지막 페이지 크기보다 크면 생략
-					%><a href="<%=jsp%>?currentPage=<%=p%>&title=<%=searchWord%>&storeId=<%=storeId%>"><%=p%></a><%
+					%><a href="<%=jsp%>?currentPage=<%=p%>&title=<%=searchWord%>"><%=p%></a><%
 			}
 		%>
 		
 		<!-- [다음 10] -->
-		<a href="<%=jsp%>?currentPage=<%=currentPage + 10%>&title=<%=searchWord%>&storeId=<%=storeId%>">다음 10</a>
+		<a href="<%=jsp%>?currentPage=<%=currentPage + 10%>&title=<%=searchWord%>">다음 10</a>
 		
 		<!-- [마지막] -->
-		<a href="<%=jsp%>?currentPage=<%=lastPage%>&title=<%=searchWord%>&storeId=<%=storeId%>">마지막</a>
+		<a href="<%=jsp%>?currentPage=<%=lastPage%>&title=<%=searchWord%>">마지막</a>
 	</div>
 	<br>
 	<!-- 검색 -->
-	<form action="/sakila/d0325/rentalList.jsp">
-		지점 :
-		<select name="storeId">
-			<option value="0" <%=storeId == 0 ? "selected" : "" %>>전체</option>
-			<option value="1" <%=storeId == 1 ? "selected" : "" %>>1지점</option>
-			<option value="2" <%=storeId == 2 ? "selected" : "" %>>2지점</option>
-		</select>
-		
+	<form action="/sakila/d0326/filmList.jsp">
 		영화 제목 : <input type="text" name="title" value="<%=searchWord%>">
-		<input type="hidden" name="storeId" value="<%=storeId%>">
 		<button type="submit">검색</button>
 	</form>
 </body>
