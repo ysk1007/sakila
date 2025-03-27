@@ -94,7 +94,7 @@
 <head>
 <meta charset="UTF-8">
 <title>영화 리스트</title>
-<link rel="stylesheet" type="text/css" href="/sakila/css/sakila.css">
+<link rel="stylesheet" type="text/css" href="/sakila/css/sakila.css?after">
 </head>
 <body>
 	<h1><a href="/sakila/index.jsp">Sakila &#127968;</a></h1>
@@ -145,7 +145,7 @@
 				// 페이지 번호
 				int p = (((currentPage - 1) / 10) * 10) + i;
 				if(p > lastPage) continue; // 마지막 페이지 크기보다 크면 생략
-					%><a href="<%=jsp%>?currentPage=<%=p%>&title=<%=searchWord%>"><%=p%></a><%
+					%><a href="<%=jsp%>?currentPage=<%=p%>&title=<%=searchWord%>" class="<%=currentPage == i ? "selected" : "" %>"><%=p%></a><%
 			}
 		%>
 		

@@ -66,7 +66,7 @@
 <head>
 <meta charset="UTF-8">
 <title>배우 상세 정보</title>
-<link rel="stylesheet" type="text/css" href="/sakila/css/sakila.css">
+<link rel="stylesheet" type="text/css" href="/sakila/css/sakila.css?after">
 </head>
 <body>
 	<h1><a href="/sakila/index.jsp">Sakila &#127968;</a></h1>

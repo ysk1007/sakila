@@ -39,7 +39,7 @@
 		where += " AND title LIKE '%" + searchWord + "%' ";
 	
 	if(storeId != 0)
-		where += " AND store_id =" + storeId;
+		where += " AND i.store_id =" + storeId;
 	
 	//DB 연결
 	Class.forName("com.mysql.cj.jdbc.Driver");
@@ -113,7 +113,7 @@
 <head>
 <meta charset="UTF-8">
 <title>대여 리스트</title>
-<link rel="stylesheet" type="text/css" href="/sakila/css/sakila.css">
+<link rel="stylesheet" type="text/css" href="/sakila/css/sakila.css?after">
 </head>
 <body>
 	<h1><a href="/sakila/index.jsp">Sakila &#127968;</a></h1>
@@ -166,7 +166,7 @@
 				// 페이지 번호
 				int p = (((currentPage - 1) / 10) * 10) + i;
 				if(p > lastPage) continue; // 마지막 페이지 크기보다 크면 생략
-					%><a href="<%=jsp%>?currentPage=<%=p%>&title=<%=searchWord%>&storeId=<%=storeId%>"><%=p%></a><%
+					%><a href="<%=jsp%>?currentPage=<%=p%>&title=<%=searchWord%>&storeId=<%=storeId%>" class="<%=currentPage == i ? "selected" : "" %>"><%=p%></a><%
 			}
 		%>
 		
@@ -187,7 +187,6 @@
 		</select>
 		
 		영화 제목 : <input type="text" name="title" value="<%=searchWord%>">
-		<input type="hidden" name="storeId" value="<%=storeId%>">
 		<button type="submit">검색</button>
 	</form>
 </body>

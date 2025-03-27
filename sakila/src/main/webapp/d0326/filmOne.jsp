@@ -67,7 +67,7 @@
 <head>
 <meta charset="UTF-8">
 <title>영화 상세 정보</title>
-<link rel="stylesheet" type="text/css" href="/sakila/css/sakila.css">
+<link rel="stylesheet" type="text/css" href="/sakila/css/sakila.css?after">
 </head>
 <body>
 	<h1><a href="/sakila/index.jsp">Sakila &#127968;</a></h1>
@@ -95,15 +95,15 @@
 		</tr>
 		<tr>
 			<th>대여 기간</th>
-			<td><%=rs.getObject("rentalDuration")%></td>
+			<td><%=rs.getObject("rentalDuration")%> 일</td>
 		</tr>
 		<tr>
 			<th>대여 비용</th>
-			<td><%=rs.getObject("rentalRate")%></td>
+			<td><%=rs.getObject("rentalRate")%> $</td>
 		</tr>
 		<tr>
 			<th>상영 시간</th>
-			<td><%=rs.getObject("LENGTH")%></td>
+			<td><%=rs.getObject("LENGTH")%> 분</td>
 		</tr>
 		<tr>
 			<th>평점</th>
