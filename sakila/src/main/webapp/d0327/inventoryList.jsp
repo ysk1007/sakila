@@ -142,7 +142,7 @@
 								%><td><a href="<%=jsp%>"><%=isAble%></a></td><%
 							}
 							else{
-								%><td><%=isAble%></td><%
+								%><td>대여중</td><%
 							}
 						%>
 					</tr>
