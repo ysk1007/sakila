@@ -3,6 +3,14 @@
 <%@ page import="java.util.*" %>
 
 <%
+	//로그인 되었는지 아닌지?
+	Integer staffId = (Integer)session.getAttribute("loginStaff");
+
+	if(staffId == null){ // 로그아웃 상태라면
+		response.sendRedirect("/sakila/d0328/loginForm.jsp");
+		return;
+	}
+
 	// 변수
 	int currentPage = 1;							// 현재 페이지
 	int lastPage;									// 마지막 페이지
@@ -125,7 +133,7 @@
 	<!-- 리스트 출력 -->
 	<table border="1" class="clean-table">
 		<tr>
-			<th>대여 번호</th>
+			<th>대여 번호</a></th>
 			<th>영화 제목</th>
 			<th>비디오 위치</th>
 			<th>지점</th>

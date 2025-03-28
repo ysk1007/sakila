@@ -3,6 +3,14 @@
 <%@ page import="java.util.*" %>
 
 <%
+	//로그인 되었는지 아닌지?
+	Integer staffId = (Integer)session.getAttribute("loginStaff");
+
+	if(staffId == null){ // 로그아웃 상태라면
+		response.sendRedirect("/sakila/d0328/loginForm.jsp");
+		return;
+	}
+
 	int currentPage = 1;		// 현재 페이지
 	int lastPage = 0;			// 마지막 페이지
 	int rowDataCount = 11;		// 한 페이지에 보여줄 데이터 수

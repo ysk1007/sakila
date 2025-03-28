@@ -1,13 +1,29 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
+<%
+	// 로그인 되었는지 아닌지?
+	Integer staffId = (Integer)session.getAttribute("loginStaff");
+
+	if(staffId == null){ // 로그아웃 상태라면
+		response.sendRedirect("/sakila/d0328/loginForm.jsp");
+		return;
+	}
+%>
+
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>Skila &#127968;</title>
-<link rel="stylesheet" type="text/css" href="/sakila/css/sakila.css?after">
+	<link rel="stylesheet" type="text/css" href="/sakila/css/sakila.css?after">
 </head>
 <body>
+	<div>
+		<h3><%=staffId%>님 반갑습니다.</h3>
+		<a href="/sakila/d0328/logout.jsp">로그아웃</a>
+		<a href="/sakila/d0328/updatePasswordForm.jsp">비밀번호 수정</a>
+	</div>
+	<hr>
 	<h1>Skila &#127968;</h1>
 	<ol>
 		<li><a href="/sakila/d0325/rentalList.jsp">대여 목록 &#128252;</a></li>

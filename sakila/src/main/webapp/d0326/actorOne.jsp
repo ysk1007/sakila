@@ -3,6 +3,14 @@
 <%@ page import="java.util.*" %>
 
 <%
+	//로그인 되었는지 아닌지?
+	Integer staffId = (Integer)session.getAttribute("loginStaff");
+
+	if(staffId == null){ // 로그아웃 상태라면
+		response.sendRedirect("/sakila/d0328/loginForm.jsp");
+		return;
+	}
+
 	String actor = "";
 	String sql = "";
 

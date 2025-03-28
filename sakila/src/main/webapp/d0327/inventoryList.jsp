@@ -1,8 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.sql.*" %>
 <%@ page import="java.util.*" %>
-
 <%
+	//로그인 되었는지 아닌지?
+	Integer staffId = (Integer)session.getAttribute("loginStaff");
+
+	if(staffId == null){ // 로그아웃 상태라면
+		response.sendRedirect("/sakila/d0328/loginForm.jsp");
+		return;
+	}
+
 	//변수
 	int currentPage = 1;							// 현재 페이지
 	int lastPage;									// 마지막 페이지
@@ -146,7 +153,7 @@
 					<tr>
 						<td><%=i.get("inventoryId") %></td>
 						<td><%=i.get("title") %></td>
-						<td><%=i.get("storeId") %></td>
+						<td><%=i.get("storeId")%> 지점</td>
 						<%
 							String isAble = String.valueOf(i.get("isRental"));
 							if(isAble.equals("대여가능")){
