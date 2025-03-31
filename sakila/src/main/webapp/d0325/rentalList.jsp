@@ -26,7 +26,7 @@
 	String where = " 1 ";							// WHERE 조건
 	
 	// 테이블 컬럼 명
-	String[] colList = {"rental_id","title","inventory_id","store_id","name","rental_date","return_date"};
+	String[] colList = {"rental_id","title","inventory_id","store_id","name","rentalDate","return_date"};
 	
 	Connection conn = null;
 	PreparedStatement stmt = null;
@@ -85,7 +85,7 @@
 		+"    r.inventory_id,"
 		+"    r.rental_id,"
 		+"    CONCAT('(', c.first_name, ' ', c.last_name, ')', c.customer_id) AS NAME,"
-		+"    r.rental_date,"
+		+"    DATE(r.rental_date) rentalDate,"
 		+"    r.return_date,"
 		+"    i.film_id,"
 		+"    i.store_id,"

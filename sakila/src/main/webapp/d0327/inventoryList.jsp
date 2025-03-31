@@ -157,10 +157,10 @@
 						<%
 							String isAble = String.valueOf(i.get("isRental"));
 							if(isAble.equals("대여가능")){
-								%><td><a href="<%=jsp%>"><%=isAble%></a></td><%
+								%><td><a href="/sakila/d0327/insertRentalForm.jsp?inventoryId=<%=i.get("inventoryId")%>">대여하기</a></td><%
 							}
 							else{
-								%><td>대여중</td><%
+								%><td><a href="/sakila/d0327/">반납하기</a></td><%
 							}
 						%>
 					</tr>

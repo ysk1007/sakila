@@ -20,7 +20,7 @@
 <body>
 	<h1>직원 로그인</h1>
 	
-	<form action ="/sakila/d0328/loginAction.jsp">
+	<form action ="/sakila/d0328/loginAction.jsp" method="post"> <!-- loginAction.jsp? -->
 	<table class="clean-table" border="1">
 		<tr>
 			<th>스태프 ID</th>

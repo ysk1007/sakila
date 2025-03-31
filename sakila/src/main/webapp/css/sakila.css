@@ -10,7 +10,7 @@ html {
 
 body {
 	font-family: 'Noto Sans KR', sans-serif;
-	margin: 2% auto;
+	margin: auto;
 	padding: 20px;
 	width: 85%;
 	max-width: 1000px;
@@ -61,7 +61,9 @@ table.clean-table {
 	border-radius: 10px;
 	overflow: hidden;
 	box-shadow: 0 2px 12px rgba(255, 255, 255, 0.05);
-	margin-bottom: 40px;
+	margin: 40px auto; /* 위아래 40px, 좌우 auto(가운데 정렬) */
+	table-layout: auto; /* 기본값: 열 너비를 내용 기반으로 자동 설정 */
+  	width: auto;        /* 테이블 전체 너비도 내용에 따라 */
 }
 
 .clean-table th {
@@ -69,15 +71,19 @@ table.clean-table {
 	background-color: #2b2b2b;
 	color: #fdd835;
 	padding: 14px 20px;
-	text-align: left;
+	text-align: center;
 	font-weight: 600;
 	border-bottom: 1px solid #3a3a3a;
+	white-space: nowrap; /* 텍스트 줄바꿈 방지 (한 줄 유지) */
+  	width: auto;
 }
 
 .clean-table td {
 	font-family: 'Noto Sans KR', sans-serif;
 	padding: 14px 20px;
 	border-bottom: 1px solid #2c2c2c;
+	white-space: nowrap; /* 텍스트 줄바꿈 방지 (한 줄 유지) */
+  	width: auto;
 }
 
 .clean-table tbody tr:nth-child(even) {
