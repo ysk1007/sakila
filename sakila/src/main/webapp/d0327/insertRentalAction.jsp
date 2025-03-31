@@ -54,8 +54,8 @@
 	
 	// 대여 데이터 추가 쿼리
 	String sql = "INSERT INTO"
-				+" rental(inventory_id,customer_id,staff_id)"
-				+" VALUES(?,?,?)";
+				+" rental(rental_date,inventory_id,customer_id,staff_id)"
+				+" VALUES(now(),?,?,?)";
 	stmt = conn.prepareStatement(sql);
 	
 	// ? 할당
