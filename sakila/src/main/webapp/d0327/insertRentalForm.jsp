@@ -11,8 +11,8 @@
 	}
 
 	// 변수
-	Integer inventoryId = null;
-	Integer customerId = null;
+	Integer inventoryId = null;		// 인벤토리 아이디
+	Integer customerId = null;		// 고객 아이디
 	
 	Connection conn = null;
 	PreparedStatement stmt = null;
@@ -31,7 +31,7 @@
 	Class.forName("com.mysql.cj.jdbc.Driver");
 	conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/sakila","root","java1234");
 	
-	// 쿼리
+	// 인벤토리 데이터 추가 쿼리
 	String sql = "SELECT i.inventory_id AS inventoryId,"
 					+" i.film_id AS filmId, "
 					+" i.store_id AS storeId, "
@@ -40,8 +40,14 @@
 				+" INNER JOIN film f ON i.film_id = f.film_id"
 				+" WHERE inventory_id=?";
 	stmt = conn.prepareStatement(sql);
+	
+	// ? 값 할당
 	stmt.setInt(1, inventoryId);
-	System.out.println(stmt);
+	
+	// 디버깅
+	// System.out.println(stmt);
+	
+	// 쿼리 실행
 	rs = stmt.executeQuery();
 	
 %>
@@ -58,21 +64,21 @@
 	<%
 		if(rs.next()){
 			%>
-			
+				<!-- 고객 검색 폼 -->
 				<form action="searchCustomerIdList.jsp" method="post">
-				<input type="hidden" name="inventoryId" value="<%=inventoryId%>">
-				<input type="text" name="searchName">
-				<button type="submit">이름으로 고객 아이디 검색</button>
+					<input type="hidden" name="inventoryId" value="<%=inventoryId%>">
+					<input type="text" name="searchName">
+					<button type="submit">이름으로 고객 아이디 검색</button>
 				</form>
-				<!-- 
-					insertRentalForm.jsp -> 이름 검색 -> customerListByName.jsp -> insertRentalForm.jsp
-				 -->
-			
+
+				<!-- 대여 실행 폼 -->
 				<form action="insertRentalAction.jsp" method="post">
 				<table border="1" class="clean-table">
 					<tr>
 						<th>고객 아이디</th>
-						<td><input type="text" name="customerId" value="<%=customerId != null ? customerId : ""%>"></td>
+						<td><!-- 고객 아이디를 인풋에 출력 -->
+							<input type="text" name="customerId" value="<%=customerId != null ? customerId : ""%>">
+						</td>
 					</tr>
 					<tr>
 						<th>인벤토리 아이디</th>

@@ -12,8 +12,8 @@
 
 	// 변수
 	int row = 0;					// 쿼리에 영향 받은 행의 개수
-	Integer customerId = null;
-	Integer active = 0;
+	Integer customerId = null;		// 고객 아이디
+	Integer active = 0;				// 휴면 상태 0 : false / 1 : true
 	
 	Connection conn = null;
 	PreparedStatement stmt = null;
@@ -40,18 +40,27 @@
 				+" ACTIVE = ?"
 				+" WHERE customer_id = ?";
 	stmt = conn.prepareStatement(sql);
+	
+	// ? 값 할당
 	stmt.setInt(1, active);
 	stmt.setInt(2, customerId);
+	
 	// 디버깅
-	//System.out.println("휴면 상태 수정 쿼리 : "+stmt);
+	// System.out.println("휴면 상태 수정 쿼리 : "+stmt);
+	
+	// 쿼리 실행
 	row = stmt.executeUpdate();
 	
-	if(row == 1){
-		System.out.println("정상 휴면 해지");
+	if(row == 1){	// 정상 휴면 해지
+		//System.out.println("정상 휴면 해지");
+	
+		// 인덱스 페이지로 이동
 		response.sendRedirect("/sakila/index.jsp");
 	}
-	else{
-		System.out.println("비정상 휴면 해지");
+	else{	// 비정상 휴면 해지
+		//System.out.println("비정상 휴면 해지");
+	
+		// 인덱스 페이지로 이동
 		response.sendRedirect("/sakila/index.jsp");
 	}
 	

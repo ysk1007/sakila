@@ -13,13 +13,13 @@
 	// 변수
 	Integer inventoryId = null;
 	
+	// 변수 받기
 	if(request.getParameter("inventoryId") != null){
 		inventoryId = Integer.parseInt(request.getParameter("inventoryId"));
 	}
 	
 	String searchName = request.getParameter("searchName");
 	
-	// FROM customer c WHERE first_name LIKE ? OR last_name like ?
 	Connection conn = null;
 	PreparedStatement stmt = null;
 	ResultSet rs = null;
@@ -28,7 +28,7 @@
 	Class.forName("com.mysql.cj.jdbc.Driver");
 	conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/sakila","root","java1234");
 	
-	// 쿼리
+	// 고객 이름 검색 쿼리
 	String sql = "SELECT customer_id AS customerId,"
 					+" first_name AS firstName, "
 					+" last_name AS lastName, "
@@ -37,8 +37,14 @@
 				+" FROM customer"
 				+" WHERE CONCAT(first_name, last_name) LIKE ?";
 	stmt = conn.prepareStatement(sql);
+	
+	// ? 값 할당
 	stmt.setString(1, "%" + searchName + "%");
-	System.out.println(stmt);
+	
+	// 디버깅
+	// System.out.println(stmt);
+	
+	// 쿼리 실행
 	rs = stmt.executeQuery();
 %>
 
@@ -69,10 +75,11 @@
 					<td><%=rs.getObject("active")%></td>
 					<td>
 						<%
-							if(rs.getInt("active") == 0){
+							// 휴면 여부에 따라
+							if(rs.getInt("active") == 0){ // 계정이 비활성화인 경우 휴면상태 업데이트 페이지로 이동
 								%><a href="/sakila/d0327/updateCustomerActive.jsp?customerId=<%=rs.getObject("customerId")%>&active=<%=rs.getObject("active")%>">휴면상태해지</a><%
 							}
-							else{
+							else{	// 계정이 활성화인 경우 대여 페이지로 이동할 수 있음
 								%><a href="/sakila/d0327/insertRentalForm.jsp?customerId=<%=rs.getObject("customerId")%>&inventoryId=<%=inventoryId%>">선택</a><%
 							}
 						%>

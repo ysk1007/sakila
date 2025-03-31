@@ -2,7 +2,6 @@
 <%@ page import="java.sql.*" %>
 
 <%
-	System.out.println("액션");
 	//로그인 되었는지 아닌지?
 	Integer thisStaffId = (Integer)session.getAttribute("loginStaff");
 
@@ -11,24 +10,25 @@
 		return;
 	}
 	
+	// 렌탈 테이블의 조건
 	/*
     `rental_id` INT NOT NULL AUTO_INCREMENT,
     `rental_date` DATETIME NOT NULL, curdate() or now() or sysdate...
     `inventory_id` MEDIUMINT UNSIGNED NOT NULL, request
     `customer_id` SMALLINT UNSIGNED NOT NULL, 직접입력
     `return_date` DATETIME NULL DEFAULT NULL, null
-    `staff_id` TINYINT UNSIGNED NOT NULL, session
+    `staff_id` TINYINT UNSIGNED NOT NULL,
  	*/
 
 	// 변수
 	int row = 0;					// 쿼리에 영향 받은 행의 개수
- 	Integer customerId = null;
- 	Integer inventoryId = null;
- 	Integer filmId = null;
-	Integer storeId = null;
-	Integer staffId = null;
+ 	Integer customerId = null;		// 고객 아이디
+ 	Integer inventoryId = null;		// 인벤토리 아이디
+ 	Integer filmId = null;			// 영화 아이디
+	Integer storeId = null;			// 지점 아이디
+	Integer staffId = null;			// 직원 아이디
 	
-	String title = request.getParameter("title");
+	String title = request.getParameter("title");	// 영화 제목
 	
 	Connection conn = null;
 	PreparedStatement stmt = null;
@@ -52,24 +52,33 @@
 	Class.forName("com.mysql.cj.jdbc.Driver");
 	conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/sakila","root","java1234");
 	
-	// 쿼리
+	// 대여 데이터 추가 쿼리
 	String sql = "INSERT INTO"
 				+" rental(inventory_id,customer_id,staff_id)"
 				+" VALUES(?,?,?)";
 	stmt = conn.prepareStatement(sql);
+	
+	// ? 할당
 	stmt.setInt(1, inventoryId);
 	stmt.setInt(2, customerId);
 	stmt.setInt(3, staffId);
-	System.out.println(stmt);
 	
+	// 디버깅
+	//System.out.println(stmt);
+	
+	// 쿼리 실행
 	row = stmt.executeUpdate();
 	
-	if(row == 1){
-		System.out.println("정상 대여");
+	if(row == 1){	// 정상 대여
+		//System.out.println("정상 대여");
+	
+		// 대여 리스트 페이지로 이동
 		response.sendRedirect("/sakila/d0325/rentalList.jsp");
 	}
-	else{
-		System.out.println("비정상 대여");
+	else{	// 비정상 대여
+		//System.out.println("비정상 대여");
+	
+		// 인벤토리 리스트 페이지로 이동
 		response.sendRedirect("/sakila/d0327/inventoryList.jsp");
 	}
 	
