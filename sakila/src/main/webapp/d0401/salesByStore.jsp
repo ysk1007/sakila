@@ -66,7 +66,8 @@
 		+" INNER JOIN city ct ON ad.city_id = ct.city_id"
 		+" INNER JOIN country cn ON ct.country_id = cn.country_id"
 		+" INNER JOIN staff sf ON st.manager_staff_id = sf.staff_id"
-		+" INNER JOIN payment p ON sf.staff_id = p.staff_id"
+		+" INNER JOIN rental r ON sf.staff_id = r.staff_id"
+		+" INNER JOIN payment p ON r.rental_id = p.rental_id"
 		+" GROUP BY sf.staff_id"
 		+" ORDER BY total_sales DESC";
 	
